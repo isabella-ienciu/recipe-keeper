@@ -23,6 +23,10 @@ docker run -d --name recipe-keeper-db -p 5555:5432 recipe-postgres
 ```bash
 docker start recipe-keeper-db
 ```
+4. To run spring boot app locally: (after starting db on docker)
+```bash
+mvn spring-boot:run
+```
 ## References
 - This article was used when setting up the db container:
 <https://wkrzywiec.medium.com/database-in-a-docker-container-how-to-start-and-whats-it-about-5e3ceea77e50>
