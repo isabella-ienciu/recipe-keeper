@@ -9,6 +9,7 @@ Currently it incorporates a postgres database stored inside a docker container a
 You must install: docker, java, maven.
 
 ## Installation
+### V1: Start database inside docker container and start java application locally
 
 To create a docker container with the postgres database, run the following commands inside the **recipe-keeper-db-docker** folder:
 1. To build the docker image:
@@ -27,6 +28,18 @@ docker start recipe-keeper-db
 ```bash
 mvn spring-boot:run
 ```
+
+### V2: Start database and app inside docker container with docker compose
+
+Docker compose defines a multi-container application; the application will take the name of the folder containing docker-compose.yml
+```bash
+docker-compose up -d --build recipe-keeper-api    # start all containers, build only the one mentioned (recipe-keeper-api) -> spring app is rebuilt, data is kept in db
+docker-compose up -d --build                      # rebuild all containers
+docker-compose stop
+docker-compose start
+docker-compose down                               # deletes all containers (and app containing them)
+```
+
 ## References
 - This article was used when setting up the db container:
 <https://wkrzywiec.medium.com/database-in-a-docker-container-how-to-start-and-whats-it-about-5e3ceea77e50>
