@@ -1,13 +1,14 @@
 package com.isbl.recipekeeper.controller;
 
 import com.isbl.recipekeeper.domain.dto.RecipeDto;
+import com.isbl.recipekeeper.domain.exception.RecipeNotFoundException;
 import com.isbl.recipekeeper.service.RecipeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("api/v1/recipes")
 public class RecipeController {
 
     private final RecipeService service;
@@ -16,9 +17,15 @@ public class RecipeController {
         this.service = service;
     }
 
-    @GetMapping("/recipes")
+    @GetMapping()
     List<RecipeDto> getAllRecipes() {
         return service.getAllRecipes();
+    }
+
+    @GetMapping("{id}")
+    @ResponseBody
+    RecipeDto getRecipeById(@PathVariable Long id) throws RecipeNotFoundException {
+        return service.getRecipeById(id);
     }
 
 }

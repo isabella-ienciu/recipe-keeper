@@ -2,8 +2,10 @@ package com.isbl.recipekeeper.service;
 
 import com.isbl.recipekeeper.domain.dto.RecipeDto;
 import com.isbl.recipekeeper.domain.entity.Recipe;
+import com.isbl.recipekeeper.domain.exception.RecipeNotFoundException;
 import com.isbl.recipekeeper.repository.RecipeRepository;
 import com.isbl.recipekeeper.util.mapper.RecipeMapper;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,5 +28,14 @@ public class RecipeService {
             recipeDtos.add(mapper.recipeToDto(recipe));
         }
         return recipeDtos;
+    }
+
+    public RecipeDto getRecipeById(Long id) throws RecipeNotFoundException {
+        var recipe = repository.findById(id);
+        if(recipe.isPresent()){
+            return mapper.recipeToDto(recipe.get());
+        } else {
+            throw new RecipeNotFoundException(id);
+        }
     }
 }

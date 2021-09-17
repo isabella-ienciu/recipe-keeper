@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static com.isbl.recipekeeper.security.ApplicationUserRole.ADMIN;
+import static com.isbl.recipekeeper.security.ApplicationUserRole.USER;
+
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,8 +28,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/ingredients")
-                .permitAll()
+                .antMatchers("/api/**").hasRole(ADMIN.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -39,8 +41,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails isabellaUser = User.builder()
                 .username("isabella")
                 .password(passwordEncoder.encode("password"))
-                .roles("ADMIN") //ROLE_ADMIN
+                .roles(ADMIN.name()) //ROLE_ADMIN
                 .build();
-        return new InMemoryUserDetailsManager(isabellaUser);
+        UserDetails userUser = User.builder()
+                .username("user")
+                .password(passwordEncoder.encode("password"))
+                .roles(USER.name()) //ROLE_USER
+                .build();
+        return new InMemoryUserDetailsManager(isabellaUser, userUser);
     }
 }
