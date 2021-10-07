@@ -38,4 +38,10 @@ public class RecipeService {
             throw new RecipeNotFoundException(id);
         }
     }
+
+    public RecipeDto saveRecipe(RecipeDto recipe) {
+        Recipe recipeToSave = mapper.dtoToRecipe(recipe);
+        Recipe savedRecipe = repository.save(recipeToSave);
+        return mapper.recipeToDto(savedRecipe);
+    }
 }

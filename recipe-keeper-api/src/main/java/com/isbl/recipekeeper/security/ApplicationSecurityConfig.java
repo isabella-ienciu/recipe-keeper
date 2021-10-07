@@ -2,6 +2,7 @@ package com.isbl.recipekeeper.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -11,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import static com.isbl.recipekeeper.security.ApplicationUserRole.ADMIN;
-import static com.isbl.recipekeeper.security.ApplicationUserRole.USER;
+import static com.isbl.recipekeeper.security.ApplicationUserPermission.*;
+import static com.isbl.recipekeeper.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
@@ -27,8 +28,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable() //TODO: will understand later in the tutorial
                 .authorizeRequests()
-                .antMatchers("/api/**").hasRole(ADMIN.name())
+                //.antMatchers("/api/**").hasRole(ADMIN.name())
+                .antMatchers("/api/v1/recipes/**", HttpMethod.POST.name()).hasAuthority(RECIPE_WRITE.name())
+                .antMatchers("/api/v1/recipes/**", HttpMethod.GET.name()).hasAuthority(RECIPE_READ.name())
+                .antMatchers("/api/v1/ingredients/**", HttpMethod.GET.name()).hasAuthority(INGREDIENTS_READ.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -41,13 +46,18 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails isabellaUser = User.builder()
                 .username("isabella")
                 .password(passwordEncoder.encode("password"))
-                .roles(ADMIN.name()) //ROLE_ADMIN
+                .authorities(ADMIN.getGrantedAuthorities())
                 .build();
         UserDetails userUser = User.builder()
                 .username("user")
                 .password(passwordEncoder.encode("password"))
-                .roles(USER.name()) //ROLE_USER
+                .authorities(USER.getGrantedAuthorities())
                 .build();
-        return new InMemoryUserDetailsManager(isabellaUser, userUser);
+        UserDetails ingredientsBoss = User.builder()
+                .username("tom")
+                .password(passwordEncoder.encode("password"))
+                .authorities(INGREDIENTS_MANAGER.getGrantedAuthorities())
+                .build();
+        return new InMemoryUserDetailsManager(isabellaUser, userUser, ingredientsBoss);
     }
 }

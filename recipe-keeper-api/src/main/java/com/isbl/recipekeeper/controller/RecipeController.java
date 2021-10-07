@@ -28,4 +28,10 @@ public class RecipeController {
         return service.getRecipeById(id);
     }
 
+    @PostMapping
+    @ResponseBody
+    RecipeDto addRecipe(@RequestBody RecipeDto recipe){
+        return service.saveRecipe(recipe);
+    }
+
 }
