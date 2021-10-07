@@ -3,6 +3,7 @@ package com.isbl.recipekeeper.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,7 @@ import static com.isbl.recipekeeper.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -31,9 +33,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable() //TODO: will understand later in the tutorial
                 .authorizeRequests()
                 //.antMatchers("/api/**").hasRole(ADMIN.name())
-                .antMatchers("/api/v1/recipes/**", HttpMethod.POST.name()).hasAuthority(RECIPE_WRITE.name())
-                .antMatchers("/api/v1/recipes/**", HttpMethod.GET.name()).hasAuthority(RECIPE_READ.name())
-                .antMatchers("/api/v1/ingredients/**", HttpMethod.GET.name()).hasAuthority(INGREDIENTS_READ.name())
+                //.antMatchers("/api/v1/recipes/**", HttpMethod.POST.name()).hasAuthority(RECIPE_WRITE.name())
+                //.antMatchers("/api/v1/recipes/**", HttpMethod.GET.name()).hasAuthority(RECIPE_READ.name())
+                //.antMatchers("/api/v1/ingredients/**", HttpMethod.GET.name()).hasAuthority(INGREDIENTS_READ.name())
                 .anyRequest()
                 .authenticated()
                 .and()
