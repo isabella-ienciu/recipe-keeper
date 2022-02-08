@@ -75,9 +75,8 @@ export class AuthenticationService {
           return true;
         }
       }
-    } else {
-      this.logout();
-      return false;
     }
+    this.logout();
+    return false;
   }
 }
