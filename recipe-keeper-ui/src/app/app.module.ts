@@ -10,6 +10,8 @@ import { AuthenticationGuard } from './guard/authentication.guard';
 import { NotificationService } from './service/notification.service';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { LoginComponent } from './login/login.component';
+import { RecipesComponent } from './recipes/recipes.component';
+import { FormsModule } from '@angular/forms';
 
 const notifierDefaultOptions: NotifierOptions = {
   position: {
@@ -53,10 +55,11 @@ const notifierDefaultOptions: NotifierOptions = {
 };
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, RecipesComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule,
     NotifierModule.withConfig(notifierDefaultOptions),
   ],

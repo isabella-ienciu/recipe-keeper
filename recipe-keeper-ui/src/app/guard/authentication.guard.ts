@@ -6,7 +6,6 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
 import { Observable } from 'rxjs';
 import { NotificationType } from '../enum/notification-type.enum';
 import { AuthenticationService } from '../service/authentication.service';
