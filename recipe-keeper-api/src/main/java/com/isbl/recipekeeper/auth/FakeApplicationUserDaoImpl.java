@@ -26,7 +26,7 @@ public class FakeApplicationUserDaoImpl implements ApplicationUserDao {
     private List<ApplicationUser> getApplicationUsers(){
         return Lists.newArrayList(
                 new ApplicationUser("isabella",
-                        passwordEncoder.encode("password"),
+                        "password",
                         ApplicationUserRole.ADMIN.getGrantedAuthorities(),
                         true,
                         true,
