@@ -17,26 +17,29 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.http.HttpResponse;
 import java.security.Principal;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 @RestController
 public class UserController {
 
-    private ApplicationUserService userService;
-    private JWTTokenProvider jwtTokenProvider;
+    private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
+    private final ApplicationUserService userService;
+    private final JWTTokenProvider jwtTokenProvider;
 
     public UserController(ApplicationUserService userService, JWTTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
-        //this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/user/login")
     public ResponseEntity<User> login(@RequestBody User user) {
-        //authenticate(user.getUsername(), user.getPassword());
+        LOGGER.info("Received authentication request.");
         UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
         if(!userDetails.getPassword().equals(user.getPassword())){
+            LOGGER.info("Authentication request failed. Invalid credentials.");
             return new ResponseEntity<>(null,null,UNAUTHORIZED);
         }
+        LOGGER.info("Authentication successful. Sending jwt header.");
         HttpHeaders jwtHeader = getJwtHeader(userDetails);
         User loginUser = new User(userDetails);
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
@@ -47,9 +50,5 @@ public class UserController {
         headers.add(JWT_TOKEN_HEADER, jwtTokenProvider.generateJwtToken(user));
         return headers;
     }
-
-/*    private void authenticate(String username, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-    }*/
 
 }
