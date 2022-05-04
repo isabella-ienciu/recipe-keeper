@@ -1,28 +1,40 @@
 version: '3.8'
 
 services:
-    #service 1: definition of postgres database
-    recipe-keeper-db:
-      image: recipe-postgres:latest
-      container_name: recipe-keeper-db   
-      environment:
-        - POSTGRES_PASSWORD=recipe
-        - POSTGRES_DB=recipe
-      ports:
-        - "5555:5432"
-      restart: always
-      
-    #service 2: definition of spring-boot app 
-    recipe-keeper-api:                        #it is just a name, which will be used only in this file.
-      image: recipe-api-spring                #name of the image after dockerfile executes
-      container_name: recipe-keeper-api       #name of the container created from docker image
-      ports:
-        - "8080:8080"                         #docker containter port with your os port
-      restart: always
-        
-      depends_on:                             #define dependencies of this app
-        - recipe-keeper-db                    #dependency name
-      environment:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://recipe-keeper-db:5432/recipe
-        SPRING_DATASOURCE_USERNAME: postgres
-        SPRING_DATASOURCE_PASSWORD: recipe
+  #service 1: definition of postgres database
+  recipe-keeper-db:
+    image: recipe-postgres:latest
+    container_name: recipe-keeper-db
+    environment:
+      - POSTGRES_PASSWORD=recipe
+      - POSTGRES_DB=recipe
+    ports:
+      - "5555:5432"
+    restart: always
+
+  #service 2: definition of spring-boot app 
+  recipe-keeper-api:                     #it is just a name, which will be used only in this file.
+    image: recipe-api-spring             #name of the image after dockerfile executes
+    container_name: recipe-keeper-api    #name of the container created from docker image
+    ports:
+      - "8080:8080"                      #docker containter port with os port
+    restart: always
+
+    depends_on:
+      #define dependencies of this app
+      - recipe-keeper-db #dependency name
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://recipe-keeper-db:5432/recipe
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: recipe
+
+  #service 3: definition of angular app
+  recipe-keeper-ui:
+    image: recipe-keeper-ui
+    container_name: recipe-keeper-ui
+    ports:
+      - "80:80"
+    depends_on:
+      - recipe-keeper-api
+    links:
+      - recipe-keeper-api
