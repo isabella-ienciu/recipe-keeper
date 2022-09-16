@@ -36,5 +36,4 @@ services:
       - "80:80"
     depends_on:
       - recipe-keeper-api
-    links:
-      - recipe-keeper-api
+
